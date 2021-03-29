@@ -40,15 +40,15 @@ def Backbone(backbone_type='ResNet50', use_pretrain=True):
     return backbone
 
 
-def OutputLayer(embd_shape, w_decay=5e-4, name='OutputLayer'):
+def OutputLayer(embd_shape, w_decay=5e-4,trainable=False, name='OutputLayer'):
     """Output Later"""
     def output_layer(x_in):
         x = inputs = Input(x_in.shape[1:])
-        x = BatchNormalization(trainable=True, name='output_batch_norm_1')(x)
+        x = BatchNormalization(trainable=trainable, name='output_batch_norm_1')(x)
         x = Dropout(rate=0.5)(x)
         x = Flatten()(x)
         x = Dense(embd_shape, kernel_regularizer=_regularizer(w_decay))(x)
-        x = BatchNormalization(trainable=True, name='output_batch_norm_2')(x)
+        x = BatchNormalization(trainable=trainable, name='output_batch_norm_2')(x)
         return Model(inputs, x, name=name)(x_in)
     return output_layer
 
@@ -83,7 +83,7 @@ def ArcFaceModel(size=None, channels=3, num_classes=None, name='arcface_model',
 
     x = Backbone(backbone_type=backbone_type, use_pretrain=use_pretrain)(x)
 
-    embds = OutputLayer(embd_shape, w_decay=w_decay)(x)
+    embds = OutputLayer(embd_shape, w_decay=w_decay, trainable=training)(x)
 
     if training:
         assert num_classes is not None

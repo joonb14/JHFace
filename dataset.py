@@ -40,21 +40,34 @@ def _transform_targets(y_train):
     return y_train
 
 
-def load_tfrecord_dataset(tfrecord_name, batch_size,
-                          binary_img=False, shuffle=True, buffer_size=10240,
-                          is_ccrop=False):
+def load_tfrecord_dataset(tfrecord_name, batch_size, binary_img=False, shuffle=True, buffer_size=10240, dataset_len=5822653, is_ccrop=False):
     """load dataset from tfrecord"""
     raw_dataset = tf.data.TFRecordDataset(tfrecord_name)
     raw_dataset = raw_dataset.repeat()
     if shuffle:
         raw_dataset = raw_dataset.shuffle(buffer_size=buffer_size)
-    dataset = raw_dataset.map(
+    
+    train_size = int(0.8 * dataset_len)
+    
+    raw_train_dataset = raw_dataset.take(train_size)
+    raw_val_dataset = raw_dataset.skip(train_size)
+    
+    train_dataset = raw_train_dataset.map(
         _parse_tfrecord(binary_img=binary_img, is_ccrop=is_ccrop),
         num_parallel_calls=tf.data.experimental.AUTOTUNE)
-    dataset = dataset.batch(batch_size)
-    dataset = dataset.prefetch(
+    train_dataset = train_dataset.batch(batch_size)
+    train_dataset = train_dataset.prefetch(
         buffer_size=tf.data.experimental.AUTOTUNE)
-    return dataset
+    
+    
+    val_dataset = raw_val_dataset.map(
+        _parse_tfrecord(binary_img=binary_img, is_ccrop=is_ccrop),
+        num_parallel_calls=tf.data.experimental.AUTOTUNE)
+    val_dataset = val_dataset.batch(batch_size)
+    val_dataset = val_dataset.prefetch(
+        buffer_size=tf.data.experimental.AUTOTUNE)
+    
+    return train_dataset, val_dataset
 
 
 def load_fake_dataset(size):
