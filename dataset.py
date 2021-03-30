@@ -83,3 +83,39 @@ def load_fake_dataset(size):
     y_train = tf.expand_dims(y_train, axis=0)
 
     return tf.data.Dataset.from_tensor_slices((x_train, y_train))
+
+
+def _parse_image(binary_img=False, is_ccrop=False):
+    def _parse_image(tfrecord):
+        if binary_img:
+            features = {'image/source_id': tf.io.FixedLenFeature([], tf.int64),
+                        'image/filename': tf.io.FixedLenFeature([], tf.string),
+                        'image/encoded': tf.io.FixedLenFeature([], tf.string)}
+            x = tf.io.parse_single_example(tfrecord, features)
+            x_train = tf.image.decode_jpeg(x['image/encoded'], channels=3)
+        else:
+            features = {'image/source_id': tf.io.FixedLenFeature([], tf.int64),
+                        'image/img_path': tf.io.FixedLenFeature([], tf.string)}
+            x = tf.io.parse_single_example(tfrecord, features)
+            image_encoded = tf.io.read_file(x['image/img_path'])
+            x_train = tf.image.decode_jpeg(image_encoded, channels=3)
+        x_train = _transform_images(is_ccrop=is_ccrop)(x_train)
+        return x_train
+    return _parse_image
+
+
+def load_representative_dataset(tfrecord_name, train_size, batch_size=1, binary_img=False, shuffle=True, buffer_size=10240, is_ccrop=False):
+    """For TFLite conversion, load representative dataset from tfrecord"""
+    raw_dataset = tf.data.TFRecordDataset(tfrecord_name)
+#     raw_dataset = raw_dataset.repeat()
+    if shuffle:
+        raw_dataset = raw_dataset.shuffle(buffer_size=buffer_size)
+    raw_dataset = raw_dataset.repeat()
+    dataset = raw_dataset.map(
+        _parse_image(binary_img=binary_img, is_ccrop=is_ccrop),
+        num_parallel_calls=tf.data.experimental.AUTOTUNE)
+    dataset = dataset.batch(batch_size)
+    dataset = dataset.prefetch(
+        buffer_size=tf.data.experimental.AUTOTUNE)
+
+    return dataset

@@ -415,7 +415,7 @@ def EfficientNet(
 
 
 def block(inputs,
-          activation='swish',
+          activation=tf.nn.relu6,#'swish' was default
           drop_rate=0.,
           name='',
           filters_in=32,
