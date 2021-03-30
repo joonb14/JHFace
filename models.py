@@ -16,7 +16,15 @@ from layers import (
     #BatchNormalization,
     ArcMarginPenaltyLogists
 )
-
+from EfficientNetLite.efficientNetLite  import (
+    EfficientNetLite0,
+    EfficientNetLite1,
+    EfficientNetLite2,
+    EfficientNetLite3,
+    EfficientNetLite4,
+    EfficientNetLite5,
+    EfficientNetLite6,
+) 
 
 def _regularizer(weights_decay=5e-4):
     return tf.keras.regularizers.l2(weights_decay)
@@ -35,6 +43,27 @@ def Backbone(backbone_type='ResNet50', use_pretrain=True):
         elif backbone_type == 'MobileNetV2':
             return MobileNetV2(input_shape=x_in.shape[1:], include_top=False,
                                weights=weights)(x_in)
+        elif backbone_type == 'EfficientNetLite0':
+            return EfficientNetLite0(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)(x_in)
+        elif backbone_type == 'EfficientNetLite1':
+            return EfficientNetLite1(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)(x_in)
+        elif backbone_type == 'EfficientNetLite2':
+            return EfficientNetLite2(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)(x_in)
+        elif backbone_type == 'EfficientNetLite3':
+            return EfficientNetLite3(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)(x_in)
+        elif backbone_type == 'EfficientNetLite4':
+            return EfficientNetLite4(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)(x_in)
+        elif backbone_type == 'EfficientNetLite5':
+            return EfficientNetLite5(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)(x_in)
+        elif backbone_type == 'EfficientNetLite6':
+            return EfficientNetLite6(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)(x_in)
         else:
             raise TypeError('backbone_type error!')
     return backbone
