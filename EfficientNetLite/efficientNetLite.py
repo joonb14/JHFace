@@ -707,22 +707,22 @@ def EfficientNetLite7(include_top=True,
       **kwargs)
 
 
-EfficientNetLite0.__doc__ = BASE_DOCSTRING.format(name='EfficientNetLite0')
-EfficientNetLite1.__doc__ = BASE_DOCSTRING.format(name='EfficientNetLite1')
-EfficientNetLite2.__doc__ = BASE_DOCSTRING.format(name='EfficientNetLite2')
-EfficientNetLite3.__doc__ = BASE_DOCSTRING.format(name='EfficientNetLite3')
-EfficientNetLite4.__doc__ = BASE_DOCSTRING.format(name='EfficientNetLite4')
-EfficientNetLite5.__doc__ = BASE_DOCSTRING.format(name='EfficientNetLite5')
-EfficientNetLite6.__doc__ = BASE_DOCSTRING.format(name='EfficientNetLite6')
-EfficientNetLite7.__doc__ = BASE_DOCSTRING.format(name='EfficientNetLite7')
+# EfficientNetLite0.__doc__ = BASE_DOCSTRING.format(name='EfficientNetLite0')
+# EfficientNetLite1.__doc__ = BASE_DOCSTRING.format(name='EfficientNetLite1')
+# EfficientNetLite2.__doc__ = BASE_DOCSTRING.format(name='EfficientNetLite2')
+# EfficientNetLite3.__doc__ = BASE_DOCSTRING.format(name='EfficientNetLite3')
+# EfficientNetLite4.__doc__ = BASE_DOCSTRING.format(name='EfficientNetLite4')
+# EfficientNetLite5.__doc__ = BASE_DOCSTRING.format(name='EfficientNetLite5')
+# EfficientNetLite6.__doc__ = BASE_DOCSTRING.format(name='EfficientNetLite6')
+# EfficientNetLite7.__doc__ = BASE_DOCSTRING.format(name='EfficientNetLite7')
 
 
-def preprocess_input(x, data_format=None):  # pylint: disable=unused-argument
-  return x
+# def preprocess_input(x, data_format=None):  # pylint: disable=unused-argument
+#   return x
 
 
-def decode_predictions(preds, top=5):
-  return imagenet_utils.decode_predictions(preds, top=top)
+# def decode_predictions(preds, top=5):
+#   return imagenet_utils.decode_predictions(preds, top=top)
 
 
-decode_predictions.__doc__ = imagenet_utils.decode_predictions.__doc__
+# decode_predictions.__doc__ = imagenet_utils.decode_predictions.__doc__
