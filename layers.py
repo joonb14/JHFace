@@ -95,8 +95,6 @@ class AddMarginPenaltyLogists(tf.keras.layers.Layer):
         sin_t = tf.sqrt(1. - cos_t ** 2, name='sin_t')
 
         cos_t_m = tf.subtract( cos_t , self.margin, name='cos_t_m' )
-        
-        cos_t_m = tf.where(cos_t > self.th, cos_t_m, cos_t - self.mm)
 
         mask = tf.one_hot(tf.cast(labels, tf.int32), depth=self.num_classes,
                           name='one_hot_mask')
