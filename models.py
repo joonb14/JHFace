@@ -9,28 +9,52 @@ from tensorflow.keras.layers import (
     BatchNormalization,  #Added
 )
 from tensorflow.keras.applications import (
+    MobileNet,
     MobileNetV2,
-    ResNet50
+    InceptionResNetV2,
+    InceptionV3,
+    ResNet50,
+    ResNet50V2,
+    ResNet101V2,
+    NASNetLarge,
+    NASNetMobile,
+    Xception
 )
 from layers import (
     #BatchNormalization,
     ArcMarginPenaltyLogists
 )
-from EfficientNetLite.efficientNetLite  import (
+from backbone.efficientnet_lite  import (
     EfficientNetLite0,
     EfficientNetLite1,
     EfficientNetLite2,
     EfficientNetLite3,
     EfficientNetLite4,
     EfficientNetLite5,
-    EfficientNetLite6,
+    EfficientNetLite6
 ) 
+from backbone.efficientnet  import (
+    EfficientNetB0,
+    EfficientNetB1,
+    EfficientNetB2,
+    EfficientNetB3,
+    EfficientNetB4,
+    EfficientNetB5,
+    EfficientNetB6,
+    EfficientNetB7
+) 
+from backbone.mobilenet_v3  import (
+    MobileNetV3Small,
+    MobileNetV3Large
+) 
+
+NASNET_WEIGHT_DIR = "/raid/workspace/jbpark/weights/"
 
 def _regularizer(weights_decay=5e-4):
     return tf.keras.regularizers.l2(weights_decay)
 
 
-def Backbone(backbone_type='ResNet50', use_pretrain=True):
+def Backbone(backbone_type='ResNet50V2', use_pretrain=True):
     """Backbone Model"""
     weights = None
     if use_pretrain:
@@ -40,9 +64,43 @@ def Backbone(backbone_type='ResNet50', use_pretrain=True):
         if backbone_type == 'ResNet50':
             return ResNet50(input_shape=x_in.shape[1:], include_top=False,
                             weights=weights)(x_in)
+        elif backbone_type == 'ResNet50V2':
+            return ResNet50V2(input_shape=x_in.shape[1:], include_top=False,
+                            weights=weights)(x_in)
+        elif backbone_type == 'ResNet101V2':
+            return ResNet101V2(input_shape=x_in.shape[1:], include_top=False,
+                            weights=weights)(x_in)
+        elif backbone_type == 'InceptionResNetV2':
+            return InceptionResNetV2(input_shape=x_in.shape[1:], include_top=False,
+                            weights=weights)(x_in)
+        elif backbone_type == 'InceptionV3':
+            return InceptionV3(input_shape=x_in.shape[1:], include_top=False,
+                            weights=weights)(x_in)
+        elif backbone_type == 'MobileNet':
+            return MobileNet(input_shape=x_in.shape[1:], include_top=False,
+                               weights=weights)(x_in)
         elif backbone_type == 'MobileNetV2':
             return MobileNetV2(input_shape=x_in.shape[1:], include_top=False,
                                weights=weights)(x_in)
+        elif backbone_type == 'NASNetLarge':
+            model = NASNetLarge(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(NASNET_WEIGHT_DIR+"nasnet_large_no_top.h5")
+            return model(x_in)
+        elif backbone_type == 'NASNetMobile':
+            model = NASNetMobile(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(NASNET_WEIGHT_DIR+"nasnet_mobile_no_top.h5")
+            return model(x_in)
+        elif backbone_type == 'Xception':
+            return Xception(input_shape=x_in.shape[1:], include_top=False,
+                               weights=weights)(x_in)
+        elif backbone_type == 'MobileNetV3Small':
+            return MobileNetV3Small(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)(x_in)
+        elif backbone_type == 'MobileNetV3Large':
+            return MobileNetV3Large(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)(x_in)
         elif backbone_type == 'EfficientNetLite0':
             return EfficientNetLite0(input_shape=x_in.shape[1:], include_top=False,
                                weights=None)(x_in)
@@ -63,6 +121,30 @@ def Backbone(backbone_type='ResNet50', use_pretrain=True):
                                weights=None)(x_in)
         elif backbone_type == 'EfficientNetLite6':
             return EfficientNetLite6(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)(x_in)
+        elif backbone_type == 'EfficientNetB0':
+            return EfficientNetB0(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)(x_in)
+        elif backbone_type == 'EfficientNetB1':
+            return EfficientNetB1(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)(x_in)
+        elif backbone_type == 'EfficientNetB2':
+            return EfficientNetB2(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)(x_in)
+        elif backbone_type == 'EfficientNetB3':
+            return EfficientNetB3(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)(x_in)
+        elif backbone_type == 'EfficientNetB4':
+            return EfficientNetB4(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)(x_in)
+        elif backbone_type == 'EfficientNetB5':
+            return EfficientNetB5(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)(x_in)
+        elif backbone_type == 'EfficientNetB6':
+            return EfficientNetB6(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)(x_in)
+        elif backbone_type == 'EfficientNetB7':
+            return EfficientNetB7(input_shape=x_in.shape[1:], include_top=False,
                                weights=None)(x_in)
         else:
             raise TypeError('backbone_type error!')
