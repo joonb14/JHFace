@@ -13,23 +13,14 @@ But if you are trying to use NasNet, please check this [issue](https://github.co
 All the pretrained weights are provided by [tf.keras.applications](https://www.tensorflow.org/api_docs/python/tf/keras/applications)
 
 * MobileNet
-
 * MobileNetV2
-
 * InceptionResNetV2
-
 * InceptionV3
-
 * ResNet50
-
 * ResNet50V2
-
 * ResNet101V2
-
 * NASNetLarge
-
 * NASNetMobile
-
 * Xception
 
 ##### Backbones w/o ImageNet pretrained weights:
