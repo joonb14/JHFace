@@ -22,7 +22,8 @@ from tensorflow.keras.applications import (
 )
 from layers import (
     #BatchNormalization,
-    ArcMarginPenaltyLogists
+    ArcMarginPenaltyLogists,
+    AddMarginPenaltyLogists
 )
 from backbone.efficientnet_lite  import (
     EfficientNetLite0,
@@ -175,6 +176,16 @@ def ArcHead(num_classes, margin=0.5, logist_scale=64, name='ArcHead'):
         return Model((inputs1, y), x, name=name)((x_in, y_in))
     return arc_head
 
+def CosHead(num_classes, margin=0.35, logist_scale=64, name='CosHead'):
+    """Cos Head"""
+    def cos_head(x_in, y_in):
+        x = inputs1 = Input(x_in.shape[1:])
+        y = Input(y_in.shape[1:])
+        x = AddMarginPenaltyLogists(num_classes=num_classes,
+                                    margin=margin,
+                                    logist_scale=logist_scale)(x, y)
+        return Model((inputs1, y), x, name=name)((x_in, y_in))
+    return cos_head
 
 def NormHead(num_classes, w_decay=5e-4, name='NormHead'):
     """Norm Head"""
@@ -201,6 +212,9 @@ def ArcFaceModel(size=None, channels=3, num_classes=None, name='arcface_model',
         labels = Input([], name='label')
         if head_type == 'ArcHead':
             logist = ArcHead(num_classes=num_classes, margin=margin,
+                             logist_scale=logist_scale)(embds, labels)
+        elif head_type == 'CosHead':
+            logist = CosHead(num_classes=num_classes, margin=margin,
                              logist_scale=logist_scale)(embds, labels)
         else:
             logist = NormHead(num_classes=num_classes, w_decay=w_decay)(embds)
