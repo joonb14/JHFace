@@ -26,16 +26,16 @@ All the pretrained weights are provided by [tf.keras.applications](https://www.t
 ##### Backbones w/o ImageNet pretrained weights:
 
 We tried to provide pretrained weights for the below models. However the official Keras implementations of the [MobileNetV3 has built in preprocessing layers inside the model](https://github.com/tensorflow/tensorflow/pull/47808#pullrequestreview-612848161). Also this accounts to [EfficientNet as well](https://github.com/tensorflow/tensorflow/pull/48276).
-We implemented EfficientNet-lite models looking at the [official code](https://github.com/tensorflow/tpu/tree/master/models/official/efficientnet/lite).
+We implemented EfficientNet-lite models looking at the [official code](https://github.com/tensorflow/tpu/tree/master/models/official/efficientnet/lite) and the [MnasNet](https://github.com/tensorflow/tpu/blob/master/models/official/mnasnet/mnasnet_model.py) as well
 If there's a bug, please tell us through the github issue page!
 
 * MobileNetV3Large
 * MobileNetV3Small
 * EfficientNetLite0 ~ Lite6
 * EfficientNetB0 ~ B7
-* MNasNetA1
-* MNasNetB1
-* MNasNetSmall
+* MnasNetA1
+* MnasNetB1
+* MnasNetSmall
 
 ##### Loss Function
 
