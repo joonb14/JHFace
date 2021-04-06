@@ -48,7 +48,10 @@ from backbone.efficientnet  import (
 from backbone.mobilenet_v3  import (
     MobileNetV3Small,
     MobileNetV3Large
-) 
+)
+from backbone.mnasnet import (
+    MnasNetModel
+)
 
 NASNET_WEIGHT_DIR = "/raid/workspace/jbpark/weights/"
 
@@ -148,6 +151,15 @@ def Backbone(backbone_type='ResNet50V2', use_pretrain=True):
         elif backbone_type == 'EfficientNetB7':
             return EfficientNetB7(input_shape=x_in.shape[1:], include_top=False,
                                weights=None)(x_in)
+        elif backbone_type == 'MnasNetA1':
+            return MnasNetModel(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None, name="MnasNetA1")(x_in)
+        elif backbone_type == 'MnasNetB1':
+            return MnasNetModel(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None, name="MnasNetB1")(x_in)
+        elif backbone_type == 'MnasNetSmall':
+            return MnasNetModel(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None, name="MnasNetSmall")(x_in)
         else:
             raise TypeError('backbone_type error!')
     return backbone
