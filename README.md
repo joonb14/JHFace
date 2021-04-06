@@ -55,7 +55,7 @@ head_type = 'ArcHead' # 'ArcHead', 'CosHead'
 #     But if you are trying to use NasNet, please check this issue first: https://github.com/keras-team/keras-applications/issues/78
 #         We manually download the weight file and explicitly load it in models.py file
 # Backbones w/o pretrained weights:
-#     MobileNetV3Large, MobileNetV3Small, EfficientNetLite0~6, EfficientNetB0~7
+#     MobileNetV3Large, MobileNetV3Small, EfficientNetLite0~6, EfficientNetB0~7, MnasNetA1, MnasNetB1, MnasNetSmall 
 backbone_type = 'EfficientNetLite0' 
 w_decay=5e-4
 num_classes = 85742 
