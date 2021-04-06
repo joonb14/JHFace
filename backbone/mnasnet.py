@@ -1,11 +1,7 @@
 import collections
 import re
 from tensorflow.keras import layers, backend, Model
-import os
 import tensorflow as tf
-
-# os.environ["CUDA_VISIBLE_DEVICES"]="0,1"
-os.environ["CUDA_VISIBLE_DEVICES"]="2"
 
 GlobalParams = collections.namedtuple('GlobalParams', [
     'batch_norm_momentum', 'batch_norm_epsilon', 'dropout_rate', 'data_format',
