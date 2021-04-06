@@ -22,6 +22,9 @@ All the pretrained weights are provided by [tf.keras.applications](https://www.t
 * NASNetLarge
 * NASNetMobile
 * Xception
+* MNasNetA1
+* MNasNetB1
+* MNasNetSmall
 
 ##### Backbones w/o ImageNet pretrained weights:
 
