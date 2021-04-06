@@ -22,9 +22,6 @@ All the pretrained weights are provided by [tf.keras.applications](https://www.t
 * NASNetLarge
 * NASNetMobile
 * Xception
-* MNasNetA1
-* MNasNetB1
-* MNasNetSmall
 
 ##### Backbones w/o ImageNet pretrained weights:
 
@@ -36,6 +33,9 @@ If there's a bug, please tell us through the github issue page!
 * MobileNetV3Small
 * EfficientNetLite0 ~ Lite6
 * EfficientNetB0 ~ B7
+* MNasNetA1
+* MNasNetB1
+* MNasNetSmall
 
 ##### Loss Function
 
