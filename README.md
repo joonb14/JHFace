@@ -48,18 +48,31 @@ in the [TensorFlow ArcFace.ipynb](https://github.com/joonb14/JHFace/blob/main/Te
 batch_size = 128 # Initially 128
 input_size = 112
 embd_shape = 512
-head_type = 'ArcHead' # 'ArcHead', 'CosHead'
+head_type = 'ArcHead' # 'ArcHead', 'CosHead', 'SphereHead'
 # Backbones w/ pretrained weights:
-#     MobileNet, MobileNetV2, InceptionResNetV2, InceptionV3, ResNet50, ResNet50V2, ResNet101V2, NASNetLarge, NASNetMobile, Xception
-#     But if you are trying to use NasNet, please check this issue first: https://github.com/keras-team/keras-applications/issues/78
-#         We manually download the weight file and explicitly load it in models.py file
+#     MobileNet, MobileNetV2, InceptionResNetV2, InceptionV3, ResNet50, ResNet50V2, ResNet101V2, NASNetLarge, NASNetMobile, Xception, MobileNetV3Large, MobileNetV3Small, EfficientNetLite0~6, EfficientNetB0~7
 # Backbones w/o pretrained weights:
-#     MobileNetV3Large, MobileNetV3Small, EfficientNetLite0~6, EfficientNetB0~7, MnasNetA1, MnasNetB1, MnasNetSmall 
+#      MnasNetA1, MnasNetB1, MnasNetSmall 
 backbone_type = 'EfficientNetLite0' 
 w_decay=5e-4
 num_classes = 85742 
 dataset_len = 5822653 
-base_lr = 0.01 # initially 0.01
+if head_type == 'SphereHead':
+    base_lr = 0.01 
+#     margin = 1.35
+#     logist_scale = 30.0 
+    margin = 4
+    logist_scale = 1
+elif head_type == 'CosHead':
+    base_lr = 0.01 
+    margin=0.35
+    logist_scale=64
+elif head_type == 'ArcHead':
+    base_lr = 0.01 
+    margin=0.5
+    logist_scale=64
+else:
+    base_lr = 0.01 # initially 0.01
 epochs = 20
 save_steps = 1000
 train_size = int(0.8 * dataset_len)
