@@ -9,8 +9,7 @@ Then checkout the [TensorFlow ArcFace.ipynb](https://github.com/joonb14/JHFace/b
 
 ##### Backbones w/ ImageNet pretrained weights:
 
-But if you are trying to use NasNet, please check this [issue](https://github.com/keras-team/keras-applications/issues/78) first.  We manually download the weight file and explicitly load it in models.py file.
-All the pretrained weights are provided by [tf.keras.applications](https://www.tensorflow.org/api_docs/python/tf/keras/applications)
+NasNet case, because of this [issue](https://github.com/keras-team/keras-applications/issues/78), we manually download the weight file and explicitly load it in [models.py](https://github.com/joonb14/JHFace/blob/main/models.py) file. We tried to provide pretrained weights for the MobileNet and EfficientNet models. However the official Keras implementations of the [MobileNetV3 has built in preprocessing layers inside the model](https://github.com/tensorflow/tensorflow/pull/47808#pullrequestreview-612848161). Also this accounts to [EfficientNet as well](https://github.com/tensorflow/tensorflow/pull/48276). So for the EfficientNet and EfficientNetLite, we used [Weights Transfer.ipynb](https://github.com/joonb14/JHFace/blob/main/Weights%20Transfer.ipynb) for extracting pretrained weights. To use the pretrained weights for NasNet, EfficientNet, EfficientNetLite please download the weights using this [link](https://drive.google.com/file/d/1EriCfISIfeRAOso1DRRuQD8TFd_as35n/view?usp=sharing). Then unzip it inside the JHFace directory. All of the pretrained weights are provided by(or extracted from) [tf.keras.applications](https://www.tensorflow.org/api_docs/python/tf/keras/applications)
 
 * MobileNet
 * MobileNetV2
@@ -22,17 +21,16 @@ All the pretrained weights are provided by [tf.keras.applications](https://www.t
 * NASNetLarge
 * NASNetMobile
 * Xception
-
-##### Backbones w/o ImageNet pretrained weights:
-
-We tried to provide pretrained weights for the below models. However the official Keras implementations of the [MobileNetV3 has built in preprocessing layers inside the model](https://github.com/tensorflow/tensorflow/pull/47808#pullrequestreview-612848161). Also this accounts to [EfficientNet as well](https://github.com/tensorflow/tensorflow/pull/48276).
-We implemented EfficientNet-lite models looking at the [official code](https://github.com/tensorflow/tpu/tree/master/models/official/efficientnet/lite) and the [MnasNet](https://github.com/tensorflow/tpu/blob/master/models/official/mnasnet/mnasnet_model.py) as well. 
-If there's a bug, please tell us through the github issue page!
-
 * MobileNetV3Large
 * MobileNetV3Small
 * EfficientNetLite0 ~ Lite6
 * EfficientNetB0 ~ B7
+
+##### Backbones w/o ImageNet pretrained weights:
+
+
+We implemented MnasNet models looking at the [official code](https://github.com/tensorflow/tpu/blob/master/models/official/mnasnet/mnasnet_model.py). If there's a bug, please tell us through the github issue page!
+
 * MnasNetA1
 * MnasNetB1
 * MnasNetSmall
@@ -41,6 +39,7 @@ If there's a bug, please tell us through the github issue page!
 
 * [ArcFace](https://openaccess.thecvf.com/content_CVPR_2019/html/Deng_ArcFace_Additive_Angular_Margin_Loss_for_Deep_Face_Recognition_CVPR_2019_paper.html)
 * [CosFace](https://openaccess.thecvf.com/content_cvpr_2018/html/Wang_CosFace_Large_Margin_CVPR_2018_paper.html)
+* [SphereFace](https://openaccess.thecvf.com/content_cvpr_2017/papers/Liu_SphereFace_Deep_Hypersphere_CVPR_2017_paper.pdf)
 ##### Configuration
 in the [TensorFlow ArcFace.ipynb](https://github.com/joonb14/JHFace/blob/main/TensorFlow%20ArcFace.ipynb), we provided simple configuration values. To change the model backbone, just change the backbone_type parameter. To change the loss function, just change the head_type parameter.
 ```python
