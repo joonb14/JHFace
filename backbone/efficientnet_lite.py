@@ -312,7 +312,7 @@ def EfficientNet(
       round_filters(32,skip=True),
       3,
       strides=2,
-      padding='same',
+      padding='valid',
       use_bias=False,
       kernel_initializer=CONV_KERNEL_INITIALIZER,
       name='stem_conv')(x)

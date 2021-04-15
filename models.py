@@ -53,7 +53,7 @@ from backbone.mnasnet import (
     MnasNetModel
 )
 
-NASNET_WEIGHT_DIR = "/raid/workspace/jbpark/weights/"
+WEIGHTS_DIR = "./weights/"
 
 def _regularizer(weights_decay=5e-4):
     return tf.keras.regularizers.l2(weights_decay)
@@ -90,67 +90,101 @@ def Backbone(backbone_type='ResNet50V2', use_pretrain=True):
         elif backbone_type == 'NASNetLarge':
             model = NASNetLarge(input_shape=x_in.shape[1:], include_top=False,
                                weights=None)
-            model.load_weights(NASNET_WEIGHT_DIR+"nasnet_large_no_top.h5")
+            model.load_weights(WEIGHTS_DIR+"nasnet_large_no_top.h5")
             return model(x_in)
         elif backbone_type == 'NASNetMobile':
             model = NASNetMobile(input_shape=x_in.shape[1:], include_top=False,
                                weights=None)
-            model.load_weights(NASNET_WEIGHT_DIR+"nasnet_mobile_no_top.h5")
+            model.load_weights(WEIGHTS_DIR+"nasnet_mobile_no_top.h5")
             return model(x_in)
         elif backbone_type == 'Xception':
             return Xception(input_shape=x_in.shape[1:], include_top=False,
                                weights=weights)(x_in)
         elif backbone_type == 'MobileNetV3Small':
-            return MobileNetV3Small(input_shape=x_in.shape[1:], include_top=False,
-                               weights=None)(x_in)
+            model = MobileNetV3Small(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(WEIGHTS_DIR+"mobilenet_v3_small_notop.ckpt")
+            return model(x_in)
         elif backbone_type == 'MobileNetV3Large':
-            return MobileNetV3Large(input_shape=x_in.shape[1:], include_top=False,
-                               weights=None)(x_in)
+            model = MobileNetV3Large(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(WEIGHTS_DIR+"mobilenet_v3_large_notop.ckpt")
+            return model(x_in)
         elif backbone_type == 'EfficientNetLite0':
-            return EfficientNetLite0(input_shape=x_in.shape[1:], include_top=False,
-                               weights=None)(x_in)
+            model = EfficientNetLite0(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(WEIGHTS_DIR+"efficientnet_lite0_notop.ckpt")
+            return model(x_in)
         elif backbone_type == 'EfficientNetLite1':
-            return EfficientNetLite1(input_shape=x_in.shape[1:], include_top=False,
-                               weights=None)(x_in)
+            model = EfficientNetLite1(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(WEIGHTS_DIR+"efficientnet_lite1_notop.ckpt")
+            return model(x_in)
         elif backbone_type == 'EfficientNetLite2':
-            return EfficientNetLite2(input_shape=x_in.shape[1:], include_top=False,
-                               weights=None)(x_in)
+            model = EfficientNetLite2(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(WEIGHTS_DIR+"efficientnet_lite2_notop.ckpt")
+            return model(x_in)
         elif backbone_type == 'EfficientNetLite3':
-            return EfficientNetLite3(input_shape=x_in.shape[1:], include_top=False,
-                               weights=None)(x_in)
+            model = EfficientNetLite3(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(WEIGHTS_DIR+"efficientnet_lite3_notop.ckpt")
+            return model(x_in)
         elif backbone_type == 'EfficientNetLite4':
-            return EfficientNetLite4(input_shape=x_in.shape[1:], include_top=False,
-                               weights=None)(x_in)
+            model = EfficientNetLite4(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(WEIGHTS_DIR+"efficientnet_lite4_notop.ckpt")
+            return model(x_in)
         elif backbone_type == 'EfficientNetLite5':
-            return EfficientNetLite5(input_shape=x_in.shape[1:], include_top=False,
-                               weights=None)(x_in)
+            model = EfficientNetLite5(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(WEIGHTS_DIR+"efficientnet_lite5_notop.ckpt")
+            return model(x_in)
         elif backbone_type == 'EfficientNetLite6':
-            return EfficientNetLite6(input_shape=x_in.shape[1:], include_top=False,
-                               weights=None)(x_in)
+            model = EfficientNetLite6(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(WEIGHTS_DIR+"efficientnet_lite6_notop.ckpt")
+            return model(x_in)
         elif backbone_type == 'EfficientNetB0':
-            return EfficientNetB0(input_shape=x_in.shape[1:], include_top=False,
-                               weights=None)(x_in)
+            model = EfficientNetB0(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(WEIGHTS_DIR+"efficientnetb0_notop.ckpt")
+            return model(x_in)
         elif backbone_type == 'EfficientNetB1':
-            return EfficientNetB1(input_shape=x_in.shape[1:], include_top=False,
-                               weights=None)(x_in)
+            model = EfficientNetB1(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(WEIGHTS_DIR+"efficientnetb1_notop.ckpt")
+            return model(x_in)
         elif backbone_type == 'EfficientNetB2':
-            return EfficientNetB2(input_shape=x_in.shape[1:], include_top=False,
-                               weights=None)(x_in)
+            model = EfficientNetB2(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(WEIGHTS_DIR+"efficientnetb2_notop.ckpt")
+            return model(x_in)
         elif backbone_type == 'EfficientNetB3':
-            return EfficientNetB3(input_shape=x_in.shape[1:], include_top=False,
-                               weights=None)(x_in)
+            model = EfficientNetB3(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(WEIGHTS_DIR+"efficientnetb3_notop.ckpt")
+            return model(x_in)
         elif backbone_type == 'EfficientNetB4':
-            return EfficientNetB4(input_shape=x_in.shape[1:], include_top=False,
-                               weights=None)(x_in)
+            model = EfficientNetB4(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(WEIGHTS_DIR+"efficientnetb4_notop.ckpt")
+            return model(x_in)
         elif backbone_type == 'EfficientNetB5':
-            return EfficientNetB5(input_shape=x_in.shape[1:], include_top=False,
-                               weights=None)(x_in)
+            model = EfficientNetB5(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(WEIGHTS_DIR+"efficientnetb5_notop.ckpt")
+            return model(x_in)
         elif backbone_type == 'EfficientNetB6':
-            return EfficientNetB6(input_shape=x_in.shape[1:], include_top=False,
-                               weights=None)(x_in)
+            model = EfficientNetB6(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(WEIGHTS_DIR+"efficientnetb6_notop.ckpt")
+            return model(x_in)
         elif backbone_type == 'EfficientNetB7':
-            return EfficientNetB7(input_shape=x_in.shape[1:], include_top=False,
-                               weights=None)(x_in)
+            model = EfficientNetB7(input_shape=x_in.shape[1:], include_top=False,
+                               weights=None)
+            model.load_weights(WEIGHTS_DIR+"efficientnetb7_notop.ckpt")
+            return model(x_in)
         elif backbone_type == 'MnasNetA1':
             return MnasNetModel(input_shape=x_in.shape[1:], include_top=False,
                                weights=None, name="MnasNetA1")(x_in)
