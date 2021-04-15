@@ -59,10 +59,8 @@ num_classes = 85742
 dataset_len = 5822653 
 if head_type == 'SphereHead':
     base_lr = 0.01 
-#     margin = 1.35
-#     logist_scale = 30.0 
-    margin = 4
-    logist_scale = 1
+    margin = 1.35
+    logist_scale = 30.0 
 elif head_type == 'CosHead':
     base_lr = 0.01 
     margin=0.35
