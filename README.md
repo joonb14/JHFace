@@ -26,13 +26,16 @@ All the pretrained weights are provided by [tf.keras.applications](https://www.t
 ##### Backbones w/o ImageNet pretrained weights:
 
 We tried to provide pretrained weights for the below models. However the official Keras implementations of the [MobileNetV3 has built in preprocessing layers inside the model](https://github.com/tensorflow/tensorflow/pull/47808#pullrequestreview-612848161). Also this accounts to [EfficientNet as well](https://github.com/tensorflow/tensorflow/pull/48276).
-We implemented EfficientNet-lite models looking at the [official code](https://github.com/tensorflow/tpu/tree/master/models/official/efficientnet/lite).
+We implemented EfficientNet-lite models looking at the [official code](https://github.com/tensorflow/tpu/tree/master/models/official/efficientnet/lite) and the [MnasNet](https://github.com/tensorflow/tpu/blob/master/models/official/mnasnet/mnasnet_model.py) as well. 
 If there's a bug, please tell us through the github issue page!
 
 * MobileNetV3Large
 * MobileNetV3Small
 * EfficientNetLite0 ~ Lite6
 * EfficientNetB0 ~ B7
+* MnasNetA1
+* MnasNetB1
+* MnasNetSmall
 
 ##### Loss Function
 
@@ -52,7 +55,7 @@ head_type = 'ArcHead' # 'ArcHead', 'CosHead'
 #     But if you are trying to use NasNet, please check this issue first: https://github.com/keras-team/keras-applications/issues/78
 #         We manually download the weight file and explicitly load it in models.py file
 # Backbones w/o pretrained weights:
-#     MobileNetV3Large, MobileNetV3Small, EfficientNetLite0~6, EfficientNetB0~7
+#     MobileNetV3Large, MobileNetV3Small, EfficientNetLite0~6, EfficientNetB0~7, MnasNetA1, MnasNetB1, MnasNetSmall 
 backbone_type = 'EfficientNetLite0' 
 w_decay=5e-4
 num_classes = 85742 
