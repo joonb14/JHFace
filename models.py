@@ -24,7 +24,8 @@ from layers import (
     #BatchNormalization,
     ArcMarginPenaltyLogists,
     AddMarginPenaltyLogists,
-    MulMarginPenaltyLogists
+    MulMarginPenaltyLogists,
+    MulMarginPenaltyLogists_practice
 )
 from backbone.efficientnet_lite  import (
     EfficientNetLite0,
@@ -239,7 +240,8 @@ def SphereHead(num_classes, margin=1.35, logist_scale=30, name='SphereHead'):
     def sphere_head(x_in, y_in):
         x = inputs1 = Input(x_in.shape[1:])
         y = Input(y_in.shape[1:], dtype=tf.int32)
-        x = MulMarginPenaltyLogists(num_classes=num_classes, margin=margin, logist_scale=logist_scale)(x, y)
+#         x = MulMarginPenaltyLogists(num_classes=num_classes, margin=margin, logist_scale=logist_scale)(x, y)
+        x = MulMarginPenaltyLogists_practice(num_classes=num_classes, margin=margin, logist_scale=logist_scale)(x, y)
         return Model((inputs1, y), x, name=name)((x_in, y_in))
     return sphere_head
 
