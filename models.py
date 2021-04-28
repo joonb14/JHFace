@@ -217,9 +217,10 @@ def ArcHead(num_classes, margin=0.5, logist_scale=64, projection_head=False , na
     def arc_head(x_in, y_in):
         x = inputs1 = Input(x_in.shape[1:])
         y = Input(y_in.shape[1:])
+        # nonlinear projection head
         if projection_head:
-            # nonlinear projection head
-            x = Dense(128, activation='relu')(x)
+            x = Dense(32, activation='relu')(x)
+#             x = Dense(64, activation='relu', use_bias=True, bias_initializer='zeros')(x)
         
         x = ArcMarginPenaltyLogists(num_classes=num_classes,
                                     margin=margin,
