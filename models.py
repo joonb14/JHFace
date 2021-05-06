@@ -24,7 +24,9 @@ from layers import (
     #BatchNormalization,
     ArcMarginPenaltyLogists,
     AddMarginPenaltyLogists,
-    MulMarginPenaltyLogists
+    MulMarginPenaltyLogists,
+    CurMarginPenaltyLogists,
+    SvxMarginPenaltyLogists
 )
 from backbone.efficientnet_lite  import (
     EfficientNetLite0,
@@ -212,16 +214,15 @@ def OutputLayer(embd_shape, w_decay=5e-4,trainable=False, name='OutputLayer'):
     return output_layer
 
 
-def ArcHead(num_classes, margin=0.5, logist_scale=64, projection_head=False , name='ArcHead'):
+def ArcHead(num_classes, margin=0.5, logist_scale=64, projection_head=False, name='ArcHead'): 
     """Arc Head"""
     def arc_head(x_in, y_in):
         x = inputs1 = Input(x_in.shape[1:])
         y = Input(y_in.shape[1:])
-        # nonlinear projection head
+#         nonlinear projection head
         if projection_head:
             x = Dense(32, activation='relu')(x)
 #             x = Dense(64, activation='relu', use_bias=True, bias_initializer='zeros')(x)
-        
         x = ArcMarginPenaltyLogists(num_classes=num_classes,
                                     margin=margin,
                                     logist_scale=logist_scale)(x, y)
@@ -257,11 +258,33 @@ def NormHead(num_classes, w_decay=5e-4, name='NormHead'):
         return Model(inputs, x, name=name)(x_in)
     return norm_head
 
+def CurHead(num_classes, margin=0.35, logist_scale=64, name='CurHead'):
+    """Cur Head"""
+    def cur_head(x_in, y_in):
+        x = inputs1 = Input(x_in.shape[1:])
+        y = Input(y_in.shape[1:], dtype=tf.int32)
+        x = CurMarginPenaltyLogists(num_classes=num_classes,
+                                    margin=margin,
+                                    logist_scale=logist_scale)(x, y)
+        return Model((inputs1, y), x, name=name)((x_in, y_in))
+    return cur_head
+
+def SvxHead(num_classes, margin=0.35, logist_scale=64, t=0.2, name='SvxHead'):
+    """Svx Head"""
+    def svx_head(x_in, y_in):
+        x = inputs1 = Input(x_in.shape[1:])
+        y = Input(y_in.shape[1:], dtype=tf.int32)
+        x = SvxMarginPenaltyLogists(num_classes=num_classes,
+                                    margin=margin,
+                                    logist_scale=logist_scale, t=t)(x, y)
+        return Model((inputs1, y), x, name=name)((x_in, y_in))
+    return svx_head
+
 
 def ArcFaceModel(size=None, channels=3, num_classes=None, name='arcface_model',
                  margin=0.5, logist_scale=64, embd_shape=512,
                  head_type='ArcHead', backbone_type='ResNet50',
-                 w_decay=5e-4, use_pretrain=True, training=False, projection_head=False):
+                 w_decay=5e-4, use_pretrain=True, training=False, projection_head=False):  
     """Arc Face Model"""
     x = inputs = Input([size, size, channels], name='input_image')
 
@@ -280,7 +303,14 @@ def ArcFaceModel(size=None, channels=3, num_classes=None, name='arcface_model',
             logist = CosHead(num_classes=num_classes, margin=margin,
                              logist_scale=logist_scale)(embds, labels)
         elif head_type == 'SphereHead':
-            logist = SphereHead(num_classes=num_classes, margin=margin, logist_scale=logist_scale)(embds, labels)
+            logist = SphereHead(num_classes=num_classes, margin=margin, 
+                                logist_scale=logist_scale)(embds, labels)
+        elif head_type == 'CurHead':
+            logist = CurHead(num_classes=num_classes, margin=margin,
+                             logist_scale=logist_scale)(embds, labels)
+        elif head_type == 'SvxHead':
+            logist = SvxHead(num_classes=num_classes, margin=margin,
+                             logist_scale=logist_scale, t=t)(embds, labels)
         else:
             logist = NormHead(num_classes=num_classes, w_decay=w_decay)(embds)
         return Model((inputs, labels), logist, name=name)
