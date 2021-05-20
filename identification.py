@@ -28,14 +28,14 @@ os.environ["CUDA_VISIBLE_DEVICES"]="1"
 batch_size = 128 # Initially 128
 input_size = 112
 embd_shape = 512
-head_type = 'ArcHead' # ''ArcHead', CosHead', 'SphereHead'
+head_type = 'CurHead' # ''ArcHead', CosHead', 'SphereHead', 'CurHead'
 # Backbones w/ pretrained weights:
 #     MobileNet, MobileNetV2, InceptionResNetV2, InceptionV3, ResNet50, ResNet50V2, ResNet101V2, NASNetLarge, NASNetMobile, Xception
 #     But if you are trying to use NasNet, please check this issue first: https://github.com/keras-team/keras-applications/issues/78
 #         We manually download the weight file and explicitly load it in models.py file
 # Backbones w/o pretrained weights:
 #     MobileNetV3Large, MobileNetV3Small, EfficientNetLite0~6, EfficientNetB0~7
-backbone_type = 'MobileNetV2' 
+backbone_type = 'ResNet50' 
 w_decay=5e-4
 num_classes = 85742 
 dataset_len = 5822653 
@@ -57,7 +57,7 @@ is_Adam = False
 projection_head = False  # True
 dgx = True
 
-version = "Check"
+version = "SGD"
     
 if dgx:
     base_dir = "/raid/workspace/honghee/FaceRecognition/checkpoints/w_tfidentity/"
@@ -197,8 +197,7 @@ for subject in tqdm(subjects):
     logger.info(f'average of {subject}: {np.mean(average_list)}')
 
 ### Calculating Average
-
-df = pd.read_csv("/raid/workspace/jihyun/IJBC/IJB/IJB-C/protocols/archive/ijbc_1N_probe_mixed.csv")
+df = pd.read_csv("/raid/workspace/honghee/ijbc_1N_probe_mixed.csv")
 
 class_list = []
 template_id_list = []
