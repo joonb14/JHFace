@@ -10,6 +10,11 @@ from sklearn.model_selection import KFold
 
 from utils import l2_norm
 
+from scipy import spatial
+from numpy import dot
+from numpy.linalg import norm
+from sklearn.metrics.pairwise import cosine_similarity
+
 
 def get_val_pair(path, name):
     carray = bcolz.carray(rootdir=os.path.join(path, name), mode='r')
@@ -67,9 +72,16 @@ def calculate_roc(thresholds, embeddings1, embeddings2, actual_issame,
     accuracy = np.zeros((nrof_folds))
     best_thresholds = np.zeros((nrof_folds))
     indices = np.arange(nrof_pairs)
-
-    diff = np.subtract(embeddings1, embeddings2)
-    dist = np.sum(np.square(diff), 1)
+    
+    # Euclidean Distance
+#     diff = np.subtract(embeddings1, embeddings2)
+#     dist = np.sum(np.square(diff), 1)
+    
+    # Cosine Similarity
+#     diff = dot(embeddings1, embeddings2.T)/(norm(embeddings1)*norm(embeddings2))
+    diff = dot(embeddings1, embeddings2.T)
+    dist = 1 - np.diag(diff)
+#     dist = 1/np.diag(diff)
 
     for fold_idx, (train_set, test_set) in enumerate(k_fold.split(indices)):
         # Find the best threshold for the fold
@@ -97,6 +109,7 @@ def calculate_roc(thresholds, embeddings1, embeddings2, actual_issame,
 
 def evaluate(embeddings, actual_issame, nrof_folds=10):
     # Calculate evaluation metrics
+#     thresholds = np.arange(0, 3, 0.005)
     thresholds = np.arange(0, 4, 0.01)
     embeddings1 = embeddings[0::2]
     embeddings2 = embeddings[1::2]

@@ -324,70 +324,7 @@ class CadMarginPenaltyLogists(tf.keras.layers.Layer):
         return logists
     
     
-class SvxMarginPenaltyLogists(tf.keras.layers.Layer):
-    """SvxMarginPenaltyLogists"""
-    def __init__(self, num_classes, margin=0.5, logist_scale=64, t=0.2, **kwargs):
-        super(SvxMarginPenaltyLogists, self).__init__(**kwargs)
-        self.num_classes = num_classes
-        self.margin = margin
-        self.logist_scale = logist_scale
-        self.t = t
-    
-    def get_config(self):
 
-        config = super().get_config().copy()
-        config.update({
-            'num_classes': self.num_classes,
-            'margin': self.margin,
-            'logist_scale': self.logist_scale
-        })
-        return config
-    
-    def build(self, input_shape):
-        self.w = self.add_weight(
-            "weights", shape=[int(input_shape[-1]), self.num_classes])
-        self.cos_m = tf.identity(tf.math.cos(self.margin), name='cos_m')
-        self.sin_m = tf.identity(tf.math.sin(self.margin), name='sin_m')
-        self.th = tf.identity(tf.math.cos(tf.constant(math.pi) - self.margin), name='th')
-        self.mm = tf.multiply(self.sin_m, self.margin, name='mm')
-        
-    def call(self, embds, labels):
-        normed_embds = tf.nn.l2_normalize(embds, axis=1, name='normed_embd')
-        normed_w = tf.nn.l2_normalize(self.w, axis=0, name='normed_weights')
-
-        cos_t = tf.matmul(normed_embds, normed_w, name='cos_t')
-        sin_t = tf.sqrt(1. - cos_t ** 2, name='sin_t')
-        cos_mt = tf.subtract(
-            cos_t * self.cos_m, sin_t * self.sin_m, name='cos_mt')
-        cos_mt = tf.where(cos_t > self.th, cos_mt, cos_t - self.mm)
-        print("what is t: ", self.t)        
-        cos_t = tf.where(tf.math.greater(cos_t , cos_mt), cos_t * (self.t + 1.0) + self.t, cos_t)
-
-        onehot = tf.one_hot(tf.cast(labels, tf.int32), depth=self.num_classes,
-                          name='one_hot_mask')
-        logists = tf.where(tf.math.equal(onehot,1.), cos_mt, cos_t)
-        logists = tf.multiply(logists, self.logist_scale, 'svxface_logist')
-        
-        return logists
-    
-    
-        # debugging....
-#         mask = cos_t > cos_mt
-#         print("mask:", mask) # Tensor("cur_margin_penalty_logists/Greater:0", shape=(None, 85742), dtype=bool)
-#         mask = tf.cast(mask, dtype=tf.int32).numpy()
-        
-#         cos_mt = tf.where(cos_t > self.th, cos_mt, cos_t - self.mm)
-        
-#         hard_example = cos_t[mask[0]]
-        
-#         self.t = tf.stop_gradient(tf.math.reduce_mean(cos_t) * 0.01 + (1 - 0.01) * self.t)
-        
-#         index = tf.stack([tf.constant(list(range(512)), tf.int32), labels], axis=1)
-        
-#         cos_t[mask] = hard_example * (self.t + hard_example)
-#         cos_t = cos_t[mask].assign_add(hard_example * (self.t + hard_example))
-#         cos_t = tf.scatter_nd(mask, hard_example * (self.t + hard_example), [85742])
-    
 
 
 

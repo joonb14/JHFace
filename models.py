@@ -27,8 +27,7 @@ from layers import (
     MulMarginPenaltyLogists,
     CurMarginPenaltyLogists,
     CadMarginPenaltyLogists,
-    AdaMarginPenaltyLogists,
-    SvxMarginPenaltyLogists
+    AdaMarginPenaltyLogists
 )
 from backbone.efficientnet_lite  import (
     EfficientNetLite0,
@@ -248,7 +247,6 @@ def SphereHead(num_classes, margin=1.35, logist_scale=30, name='SphereHead'):
         x = inputs1 = Input(x_in.shape[1:])
         y = Input(y_in.shape[1:], dtype=tf.int32)
         x = MulMarginPenaltyLogists(num_classes=num_classes, margin=margin, logist_scale=logist_scale)(x, y)
-#         x = MulMarginPenaltyLogists_practice(num_classes=num_classes, margin=margin, logist_scale=logist_scale)(x, y)
         return Model((inputs1, y), x, name=name)((x_in, y_in))
     return sphere_head
 
@@ -293,18 +291,6 @@ def AdaHead(num_classes, margin=0.35, logist_scale=64, name='AdaHead'):
         return Model((inputs1, y), x, name=name)((x_in, y_in))
     return ada_head
 
-def SvxHead(num_classes, margin=0.35, logist_scale=64, t=0.2, name='SvxHead'):
-    """Svx Head"""
-    def svx_head(x_in, y_in):
-        x = inputs1 = Input(x_in.shape[1:])
-        y = Input(y_in.shape[1:], dtype=tf.int32)
-        x = SvxMarginPenaltyLogists(num_classes=num_classes,
-                                    margin=margin,
-                                    logist_scale=logist_scale, t=t)(x, y)
-        return Model((inputs1, y), x, name=name)((x_in, y_in))
-    return svx_head
-
-
 def ArcFaceModel(size=None, channels=3, num_classes=None, name='arcface_model',
                  margin=0.5, logist_scale=64, embd_shape=512,
                  head_type='ArcHead', backbone_type='ResNet50',
@@ -337,9 +323,6 @@ def ArcFaceModel(size=None, channels=3, num_classes=None, name='arcface_model',
                              logist_scale=logist_scale)(embds, labels)
         elif head_type == 'AdaHead':
             logist = AdaHead(num_classes=num_classes, margin=margin,
-                             logist_scale=logist_scale)(embds, labels)
-        elif head_type == 'SvxHead':
-            logist = SvxHead(num_classes=num_classes, margin=margin,
                              logist_scale=logist_scale)(embds, labels)
         else:
             logist = NormHead(num_classes=num_classes, w_decay=w_decay)(embds)
