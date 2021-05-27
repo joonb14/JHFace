@@ -31,7 +31,7 @@ def _transform_images(is_ccrop=False):
         x_train = tf.image.random_flip_left_right(x_train)
         x_train = tf.image.random_saturation(x_train, 0.6, 1.4)
         x_train = tf.image.random_brightness(x_train, 0.4)
-        x_train = x_train / 255
+        x_train = ((x_train / 255)-0.5)/0.5
         return x_train
     return transform_images
 
