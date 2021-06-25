@@ -1,3 +1,4 @@
+import numpy
 import tensorflow as tf
 from tensorflow.keras import Model
 from tensorflow.keras.layers import (
@@ -181,7 +182,8 @@ def Backbone(backbone_type='ResNet50V2', use_pretrain=True):
         elif backbone_type == 'EfficientNetB6':
             model = EfficientNetB6(input_shape=x_in.shape[1:], include_top=False,
                                weights=None)
-            model.load_weights(WEIGHTS_DIR+"efficientnetb6_notop.ckpt")
+            if use_pretrain:
+                model.load_weights(WEIGHTS_DIR+"efficientnetb6_notop.ckpt")
             return model(x_in)
         elif backbone_type == 'EfficientNetB7':
             model = EfficientNetB7(input_shape=x_in.shape[1:], include_top=False,
@@ -299,10 +301,12 @@ def ArcFaceModel(size=None, channels=3, num_classes=None, name='arcface_model',
     x = inputs = Input([size, size, channels], name='input_image')
 
     x = Backbone(backbone_type=backbone_type, use_pretrain=use_pretrain)(x)
-
+#     tf.print("after backbone: ", x)
+#     print("after backbone: ", x.numpy())
     embds = OutputLayer(embd_shape, w_decay=w_decay, trainable=training)(x)
-#     if projection_head:
-#         embds  = Dense(128, activation='relu')(embds)
+#     tf.print("after outputlayer: ", embds)
+#     print("after outputlayer: ", embds.numpy())
+    
     if training:
         assert num_classes is not None
         labels = Input([], name='label', dtype=tf.int32)

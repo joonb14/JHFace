@@ -74,14 +74,14 @@ def calculate_roc(thresholds, embeddings1, embeddings2, actual_issame,
     indices = np.arange(nrof_pairs)
     
     # Euclidean Distance
-#     diff = np.subtract(embeddings1, embeddings2)
-#     dist = np.sum(np.square(diff), 1)
+    diff = np.subtract(embeddings1, embeddings2)
+    dist = np.sum(np.square(diff), 1)
     
     # Cosine Similarity
-#     diff = dot(embeddings1, embeddings2.T)/(norm(embeddings1)*norm(embeddings2))
-    diff = dot(embeddings1, embeddings2.T)
-    dist = 1 - np.diag(diff)
-#     dist = 1/np.diag(diff)
+# #     diff = dot(embeddings1, embeddings2.T)/(norm(embeddings1)*norm(embeddings2))
+#     diff = dot(embeddings1, embeddings2.T)
+#     dist = 1 - np.diag(diff)
+# #     dist = 1/np.diag(diff)
 
     for fold_idx, (train_set, test_set) in enumerate(k_fold.split(indices)):
         # Find the best threshold for the fold
@@ -126,14 +126,21 @@ def perform_val(embedding_size, batch_size, model,
     embeddings = np.zeros([len(carray), embedding_size])
 
     for idx in tqdm.tqdm(range(0, len(carray), batch_size)):
+        
         batch = carray[idx:idx + batch_size]
+#         print("batch_imgs: ", batch)
         batch = np.transpose(batch, [0, 2, 3, 1]) * 0.5 + 0.5
+#         print("batch_imgs2: ", batch)
         if is_ccrop:
             batch = ccrop_batch(batch)
         if is_flip:
             fliped = hflip_batch(batch)
+#             print("output_batch: ", model(batch))
+#             print("flipped_batch: ", model(fliped))
             emb_batch = model(batch) + model(fliped)
+#             print("emb_batch: ", emb_batch)
             embeddings[idx:idx + batch_size] = l2_norm(emb_batch)
+#             print("embeddings: ", l2_norm(emb_batch))
         else:
             batch = ccrop_batch(batch)
             emb_batch = model(batch)
