@@ -73,15 +73,18 @@ def calculate_roc(thresholds, embeddings1, embeddings2, actual_issame,
     best_thresholds = np.zeros((nrof_folds))
     indices = np.arange(nrof_pairs)
     
+    best_tprs = np.zeros(nrof_folds)
+    best_fprs = np.zeros(nrof_folds)
+    
     # Euclidean Distance
-    diff = np.subtract(embeddings1, embeddings2)
-    dist = np.sum(np.square(diff), 1)
+#     diff = np.subtract(embeddings1, embeddings2)
+#     dist = np.sum(np.square(diff), 1)
     
     # Cosine Similarity
-# #     diff = dot(embeddings1, embeddings2.T)/(norm(embeddings1)*norm(embeddings2))
-#     diff = dot(embeddings1, embeddings2.T)
-#     dist = 1 - np.diag(diff)
-# #     dist = 1/np.diag(diff)
+#     diff = dot(embeddings1, embeddings2.T)/(norm(embeddings1)*norm(embeddings2))
+    diff = dot(embeddings1, embeddings2.T)
+    dist = 1 - np.diag(diff)
+#     dist = 1/np.diag(diff)
 
     for fold_idx, (train_set, test_set) in enumerate(k_fold.split(indices)):
         # Find the best threshold for the fold
@@ -101,10 +104,22 @@ def calculate_roc(thresholds, embeddings1, embeddings2, actual_issame,
             thresholds[best_threshold_index],
             dist[test_set],
             actual_issame[test_set])
+        
+        ## tpr and fpr for best thresholds
+        best_tprs[fold_idx], best_fprs[fold_idx], _ = calculate_accuracy(
+            thresholds[best_threshold_index],
+            dist[test_set],
+            actual_issame[test_set])
+    
 
     tpr = np.mean(tprs, 0)
     fpr = np.mean(fprs, 0)
-    return tpr, fpr, accuracy, best_thresholds
+#     print("tpr: ", tpr) 
+#     print("fpr: ", fpr)
+#     print("best_tpr: ", best_tprs) 
+#     print("best_fpr: ", best_fprs)
+#     return tpr, fpr, accuracy, best_thresholds
+    return best_tprs, best_fprs, tpr, fpr, accuracy, best_thresholds
 
 
 def evaluate(embeddings, actual_issame, nrof_folds=10):
@@ -113,11 +128,13 @@ def evaluate(embeddings, actual_issame, nrof_folds=10):
     thresholds = np.arange(0, 4, 0.01)
     embeddings1 = embeddings[0::2]
     embeddings2 = embeddings[1::2]
-    tpr, fpr, accuracy, best_thresholds = calculate_roc(
+    best_tprs, best_fprs, tpr, fpr, accuracy, best_thresholds = calculate_roc(
         thresholds, embeddings1, embeddings2, np.asarray(actual_issame),
         nrof_folds=nrof_folds)
 
-    return tpr, fpr, accuracy, best_thresholds
+#     return tpr, fpr, accuracy, best_thresholds
+    return best_tprs, best_fprs, tpr, fpr, accuracy, best_thresholds
+ 
 
 
 def perform_val(embedding_size, batch_size, model,
@@ -146,7 +163,8 @@ def perform_val(embedding_size, batch_size, model,
             emb_batch = model(batch)
             embeddings[idx:idx + batch_size] = l2_norm(emb_batch)
 
-    tpr, fpr, accuracy, best_thresholds = evaluate(
+    best_tprs, best_fprs, tpr, fpr, accuracy, best_thresholds = evaluate(
         embeddings, issame, nrof_folds)
 
-    return accuracy.mean(), best_thresholds.mean()
+#     return accuracy.mean(), best_thresholds.mean()
+    return best_tprs.mean(), best_fprs.mean(), tpr.mean(), fpr.mean(), accuracy.mean(), best_thresholds.mean()
